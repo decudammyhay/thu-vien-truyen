@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
+    <title>Thư Viện Đam Mỹ</title>
     <style>
         :root {
             --primary: #a10000; 
@@ -271,6 +271,16 @@
         let allStatuses = new Set(); 
         let allTeams = new Set();
 
+        // Hàm chuyển đổi link Google Drive sang link ảnh trực tiếp
+        function fixDriveLink(url) {
+            if (!url) return '';
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+            return url;
+        }
+
         fetch(url)
             .then(res => res.text())
             .then(text => {
@@ -292,7 +302,7 @@
 
                         const tenTruyen = getValue(0, '');
                         
-                        // Bỏ qua dòng trống hoặc dòng tiêu đề có chữ "Tên truyện"
+                        // Bỏ qua dòng trống hoặc dòng tiêu đề
                         if (!tenTruyen || tenTruyen.toString().toLowerCase().includes('tên truyện')) return;
 
                         const tacGia = getValue(1, 'Đang cập nhật');
@@ -321,9 +331,11 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        // Lấy đúng Link ảnh gg drive ở Cột J (index 9)
-                        let linkAnh = getValue(9, ''); 
-                        if (!linkAnh || linkAnh === '#ERROR!') {
+                        // Lấy link gốc từ cột J (index 9) và tự động chuẩn hóa sang link ảnh trực tiếp
+                        let rawLinkAnh = getValue(9, ''); 
+                        let linkAnh = fixDriveLink(rawLinkAnh);
+                        
+                        if (!linkAnh) {
                             linkAnh = 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh';
                         }
 
@@ -332,7 +344,7 @@
 
                         storiesHTML += `
                             <div class="story-card" data-genre="${theLoai}" data-status="${tinhTrang}" data-team="${team}">
-                                <img src="${linkAnh}" alt="${tenTruyen}" class="story-image">
+                                <img src="${linkAnh}" alt="${tenTruyen}" class="story-image" onerror="this.src='https://via.placeholder.com/250x350?text=Lỗi+Ảnh'">
                                 <h3 class="story-title">${tenTruyen}</h3>
                                 <div class="story-info">
                                     <b>Tác giả:</b> ${tacGia}<br>

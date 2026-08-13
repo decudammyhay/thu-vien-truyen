@@ -292,7 +292,7 @@
 
                         const tenTruyen = getValue(0, '');
                         
-                        // Nếu ô tên truyện trống, hoặc nếu đây là dòng tiêu đề đầu tiên chứa chữ "Tên truyện" thì bỏ qua
+                        // Bỏ qua dòng trống hoặc dòng tiêu đề có chữ "Tên truyện"
                         if (!tenTruyen || tenTruyen.toString().toLowerCase().includes('tên truyện')) return;
 
                         const tacGia = getValue(1, 'Đang cập nhật');
@@ -321,10 +321,10 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        // Lấy link ảnh từ cột J (index 9) hoặc cột K (index 10)
+                        // Lấy đúng Link ảnh gg drive ở Cột J (index 9)
                         let linkAnh = getValue(9, ''); 
                         if (!linkAnh || linkAnh === '#ERROR!') {
-                            linkAnh = getValue(10, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
+                            linkAnh = 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh';
                         }
 
                         storiesData.push({ tenTruyen, gioiThieu, linkTruyen });

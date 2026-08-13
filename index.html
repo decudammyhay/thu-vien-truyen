@@ -160,7 +160,7 @@
 
     <div class="main-layout">
         <div class="content" id="story-grid">
-            <!-- Dữ liệu load vào đây, nếu lỗi sẽ hiện thông báo màu đỏ -->
+            <h3 id="loading-text" style="color: #6a35c2; text-align: center; width: 100%;">Đang tải dữ liệu truyện...</h3>
         </div>
 
         <div class="sidebar">
@@ -190,8 +190,8 @@
     </div>
 
     <script>
-        // BẠN HÃY XÓA CHỮ "DÁN_ID_CỦA_BẠN_VÀO_ĐÂY" VÀ DÁN ID COPY Ở BƯỚC 1 VÀO NHÉ:
-        const sheetId = '1QJYWYyns-AUyAMUbuLnsUSrN6zNg-AuNVlK4ccy-__M'; 
+        // MÌNH ĐÃ ĐIỀN SẴN ID SHEET CỦA BẠN VÀO ĐÂY RỒI NHÉ
+        const sheetId = '1QJYWVyns_AUyAMUbuLnsUSrN6zNg_AuNVIK4ccy__M'; 
         
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=0`;
         let storiesData = []; 
@@ -201,7 +201,6 @@
             .then(text => {
                 const grid = document.getElementById('story-grid');
                 try {
-                    // Thuật toán đọc JSON bất chấp lỗi định dạng của Google
                     const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
                     const json = JSON.parse(jsonString);
                     const rows = json.table.rows;
@@ -255,7 +254,7 @@
 
                 } catch (error) {
                     console.error("Lỗi:", error);
-                    grid.innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI HIỂN THỊ:</b> Bạn kiểm tra lại xem dán đúng ID chưa nhé. Nếu đúng ID rồi thì kiểm tra lại quyền chia sẻ file Sheet phải là "Bất kỳ ai có đường liên kết".</p>`;
+                    grid.innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI HIỂN THỊ DỮ LIỆU:</b> ID đúng nhưng không thể đọc Sheet. Bạn hãy vào Google Sheet > Tệp > Chia sẻ > Công bố lên web lại một lần nữa nhé.</p>`;
                 }
             })
             .catch(error => {

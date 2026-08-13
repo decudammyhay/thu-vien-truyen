@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
-    <!-- Đổi sang font Dancing Script mềm mại, dễ đọc, hỗ trợ tiếng Việt cực tốt -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <title>Thư Viện Đam Mỹ</title>
     <style>
         :root {
             --primary: #a10000; 
@@ -39,7 +37,7 @@
             min-height: 100vh;
         }
         
-        /* --- TIÊU ĐỀ THƯ PHÁP MỚI --- */
+        /* --- TIÊU ĐỀ THẲNG ĐỨNG, SANG TRỌNG --- */
         .site-header {
             text-align: center;
             padding: 30px 10px 15px 10px; 
@@ -47,13 +45,16 @@
             transition: background-color 0.3s;
         }
         .site-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 55px;
+            font-family: 'Georgia', 'Times New Roman', serif; /* Phông chữ thẳng, cổ điển */
+            font-size: 45px;
             color: var(--primary);
             margin: 0;
+            padding-bottom: 15px; 
+            display: inline-block; 
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
-            letter-spacing: 1px;
+            text-transform: uppercase; /* In hoa toàn bộ */
+            letter-spacing: 4px; /* Giãn cách chữ cho thanh thoát */
         }
 
         /* --- MENU --- */
@@ -304,8 +305,8 @@
 
         /* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI --- */
         @media (max-width: 768px) {
-            .site-title { font-size: 42px; }
-            .site-header { padding: 20px 10px 15px 10px; }
+            .site-title { font-size: 32px; padding-bottom: 15px; }
+            .site-header { padding: 20px 10px 5px 10px; }
             .main-layout { flex-direction: column; }
             .navbar {
                 gap: 5px;

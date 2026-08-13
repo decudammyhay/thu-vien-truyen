@@ -1,221 +1,112 @@
- <!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Thư Viện Truyện</title>
-
     <style>
-
         body {
-
-            background-color: #6a35c2; /* Màu nền tím giống mẫu của bạn */
-
+            background-color: #F5D0D0; /* Màu nền đỏ nhạt */
             font-family: Arial, sans-serif;
-
             margin: 0;
-
             padding: 20px;
-
             color: #333;
-
         }
-
         .container {
-
             max-width: 1200px;
-
             margin: 0 auto;
-
             display: grid;
-
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-
             gap: 20px;
-
         }
-
         .story-card {
-
             background: #fff;
-
             border-radius: 15px;
-
             overflow: hidden;
-
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-
             text-align: center;
-
             padding: 15px;
-
             transition: transform 0.2s;
-
         }
-
         .story-card:hover {
-
             transform: translateY(-5px);
-
         }
-
         .story-image {
-
             width: 100%;
-
             height: 350px;
-
             object-fit: cover;
-
             border-radius: 10px;
-
         }
-
         .story-title {
-
             font-size: 18px;
-
             font-weight: bold;
-
             margin: 15px 0 5px;
-
             color: #000;
-
         }
-
         .story-author {
-
             font-size: 14px;
-
             color: #666;
-
             margin-bottom: 15px;
-
         }
-
         .read-btn {
-
             display: inline-block;
-
-            background: #000;
-
+            background: #6a35c2; /* Giữ nút bấm màu tím cho nổi bật trên nền đỏ nhạt */
             color: #fff;
-
             text-decoration: none;
-
             padding: 10px 20px;
-
             border-radius: 25px;
-
             font-size: 14px;
-
             font-weight: bold;
-
         }
-
         .read-btn:hover {
-
-            background: #333;
-
+            background: #4e2694;
         }
-
     </style>
-
 </head>
-
 <body>
 
-
-
     <div class="container" id="story-grid">
-
         <!-- Các truyện sẽ tự động xuất hiện ở đây -->
-
     </div>
 
-
-
     <script>
-
-        // THAY ID SHEET CỦA BẠN VÀO ĐÂY
-
-        const sheetId = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQR7ixaE_KVsQZleK6vcFscAQevxTgmUxNgc0klAbhtqtRY5bZJxjF9b0ZKpdbUQXwje0TzwqF2JgIR/pub?gid=0&single=true&output=csv'; 
-
+        // ID đã được sửa lại dấu gạch ngang chính xác
+        const sheetId = '1QJYWVyns-AUyAMUbuLnsUSrN6zNg-AuNVIK4ccy__M'; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
 
-
-
         fetch(url)
-
             .then(res => res.text())
-
             .then(text => {
-
-                // Xử lý dữ liệu JSON trả về từ Google
-
                 const json = JSON.parse(text.substr(47).slice(0, -2));
-
                 const rows = json.table.rows;
-
                 const grid = document.getElementById('story-grid');
 
-
-
-                // Lặp qua từng dòng trong Sheet (Bỏ qua dòng tiêu đề đầu tiên)
-
                 rows.forEach((row, index) => {
-
                     if (index === 0 || !row.c[0]) return; 
 
-
-
-                    // Định vị các cột: Tên truyện(0), Tác giả(1), ... Link truyện(7), Link Ảnh(9 - giả sử bạn đặt ở cột J)
-
-                    // Cấu trúc mảng c: [0] tương ứng cột A, [1] tương ứng cột B...
-
-                    const tenTruyen = row.c[0] ? row.c[0].v : 'Chưa cập nhật';
-
-                    const tacGia = row.c[1] ? row.c[1].v : '';
-
-                    const linkTruyen = row.c[7] ? row.c[7].v : '#';
-
+                    // QUY TẮC ĐẾM CỘT: Cột A là 0, B là 1, C là 2...
+                    const tenTruyen = row.c[0] ? row.c[0].v : 'Chưa cập nhật'; // Cột A
+                    const tacGia = row.c[1] ? row.c[1].v : ''; // Cột B
+                    
+                    // Theo ảnh mới nhất, cột Link Truyện đang ở cột I (chữ cái thứ 9 => số 8)
+                    const linkTruyen = row.c[8] ? row.c[8].v : '#'; 
+                    
+                    // Cột Link ảnh đã chuyển đổi. 
+                    // Nếu nó nằm ở cột J thì số 9. Nếu ở cột K thì bạn sửa thành số 10 nhé!
                     const linkAnh = row.c[9] ? row.c[9].v : 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh';
 
-
-
-                    // Tạo giao diện cho từng thẻ truyện
-
                     const card = `
-
                         <div class="story-card">
-
                             <img src="${linkAnh}" alt="${tenTruyen}" class="story-image">
-
                             <h3 class="story-title">${tenTruyen}</h3>
-
                             <p class="story-author">${tacGia}</p>
-
-                            <a href="${linkTruyen}" class="read-btn" target="_blank">ĐỌC THÊM Ở ĐÂY ➔</a>
-
+                            <a href="${linkTruyen}" class="read-btn" target="_blank">ĐỌC TRUYỆN ➔</a>
                         </div>
-
                     `;
-
                     grid.innerHTML += card;
-
                 });
-
             })
-
             .catch(error => console.error('Lỗi khi tải dữ liệu:', error));
-
     </script>
-
 </body>
-
 </html>

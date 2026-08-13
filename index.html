@@ -285,15 +285,15 @@
                     let storiesHTML = '';
 
                     rows.forEach((row, index) => {
-                        if (index === 0) return; 
-
                         const getValue = (colIndex, defaultVal) => {
                             if (row.c && row.c[colIndex] && row.c[colIndex].v != null) return row.c[colIndex].v;
                             return defaultVal;
                         };
 
                         const tenTruyen = getValue(0, '');
-                        if (!tenTruyen) return; // Bỏ qua dòng trống
+                        
+                        // Nếu ô tên truyện trống, hoặc nếu đây là dòng tiêu đề đầu tiên chứa chữ "Tên truyện" thì bỏ qua
+                        if (!tenTruyen || tenTruyen.toString().toLowerCase().includes('tên truyện')) return;
 
                         const tacGia = getValue(1, 'Đang cập nhật');
                         const theLoai = getValue(2, 'Đang cập nhật');
@@ -321,7 +321,7 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        // Cột J (index 9) là Link ảnh chính thức trong Sheet của bạn
+                        // Lấy link ảnh từ cột J (index 9) hoặc cột K (index 10)
                         let linkAnh = getValue(9, ''); 
                         if (!linkAnh || linkAnh === '#ERROR!') {
                             linkAnh = getValue(10, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');

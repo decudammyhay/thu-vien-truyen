@@ -369,7 +369,7 @@
                     
                     let storiesHTML = '';
 
-                    rows.forEach((row, index) => {
+                    rows.forEach((row) => {
                         const getValue = (colIndex, defaultVal) => {
                             if (row.c && row.c[colIndex] && row.c[colIndex].v != null) return row.c[colIndex].v;
                             return defaultVal;

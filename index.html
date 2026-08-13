@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ</title>
+    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
     <style>
         :root {
             --primary: #a10000; 
@@ -293,7 +293,7 @@
                         };
 
                         const tenTruyen = getValue(0, '');
-                        if (!tenTruyen) return;
+                        if (!tenTruyen) return; // Bỏ qua dòng trống
 
                         const tacGia = getValue(1, 'Đang cập nhật');
                         const theLoai = getValue(2, 'Đang cập nhật');
@@ -321,8 +321,11 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        let linkAnh = getValue(10, ''); 
-                        if (!linkAnh || linkAnh === '#ERROR!') linkAnh = getValue(9, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
+                        // Cột J (index 9) là Link ảnh chính thức trong Sheet của bạn
+                        let linkAnh = getValue(9, ''); 
+                        if (!linkAnh || linkAnh === '#ERROR!') {
+                            linkAnh = getValue(10, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
+                        }
 
                         storiesData.push({ tenTruyen, gioiThieu, linkTruyen });
                         const arrayIndex = storiesData.length - 1;

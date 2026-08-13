@@ -9,12 +9,29 @@
             --primary: #a10000; 
             --bg-color: #F5D0D0; 
             --card-bg: #ffffff;
+            --text-color: #333333;
+            --sidebar-bg: #ffffff;
+            --border-color: #eee;
+            --modal-bg: #ffffff;
         }
+
+        /* --- CHẾ ĐỘ TỐI (DARK MODE) --- */
+        [data-theme="dark"] {
+            --primary: #ff6b6b;
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #f0f0f0;
+            --sidebar-bg: #2d2d2d;
+            --border-color: #444444;
+            --modal-bg: #2d2d2d;
+        }
+
         body {
             background-color: var(--bg-color);
             font-family: Arial, sans-serif;
             margin: 0;
-            color: #333;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         
         /* --- MENU --- */
@@ -26,6 +43,7 @@
             align-items: center;
             gap: 15px;
             flex-wrap: nowrap;
+            transition: background-color 0.3s;
         }
         .navbar a.nav-link {
             color: white;
@@ -41,7 +59,24 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* --- DROPDOWN ĐÃ FIX LỖI RÊ CHUỘT --- */
+        /* --- NÚT SÁNG/TỐI --- */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        .theme-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* --- DROPDOWN --- */
         .dropdown {
             position: relative;
             display: inline-flex;
@@ -50,7 +85,7 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #ffffff;
+            background-color: var(--card-bg);
             min-width: 200px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1000;
@@ -61,15 +96,16 @@
             overflow: hidden;
             padding-top: 5px;
             margin-top: 5px;
+            transition: background-color 0.3s;
         }
         .dropdown-content a {
-            color: #333;
+            color: var(--text-color);
             padding: 10px 15px;
             text-decoration: none;
             display: block;
             text-align: left;
             font-weight: normal;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             font-size: 14px;
         }
         .dropdown-content a:hover {
@@ -101,11 +137,12 @@
         }
         .sidebar {
             flex: 1;
-            background: var(--card-bg);
+            background: var(--sidebar-bg);
             padding: 20px;
             border-radius: 15px;
             height: fit-content;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
         }
         
         /* --- CARD TRUYỆN --- */
@@ -115,6 +152,7 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
         }
         .story-image {
             width: 100%;
@@ -127,6 +165,7 @@
             text-align: left;
             margin: 10px 0;
             line-height: 1.6;
+            color: var(--text-color);
         }
         .story-title {
             font-size: 16px;
@@ -164,10 +203,10 @@
         }
         .genre-list li {
             padding: 8px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
         .genre-list a {
-            color: #333;
+            color: var(--text-color);
             text-decoration: none;
             display: block;
             cursor: pointer;
@@ -188,7 +227,8 @@
             align-items: center;
         }
         .modal-content {
-            background: #fff;
+            background: var(--modal-bg);
+            color: var(--text-color);
             padding: 20px;
             border-radius: 15px;
             max-width: 600px;
@@ -196,6 +236,7 @@
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
+            transition: background-color 0.3s, color 0.3s;
         }
         .close-btn {
             position: absolute;
@@ -224,9 +265,9 @@
                 gap: 5px;
                 padding: 8px 5px;
             }
-            .navbar a.nav-link {
-                font-size: 12px;
-                padding: 6px 8px;
+            .navbar a.nav-link, .theme-toggle-btn {
+                font-size: 11px;
+                padding: 5px 6px;
             }
         }
     </style>
@@ -251,6 +292,9 @@
                 <a href="#">Đang tải...</a>
             </div>
         </div>
+
+        <!-- Nút chuyển đổi Sáng/Tối -->
+        <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙 Tối</button>
     </div>
 
     <div class="main-layout">
@@ -276,6 +320,26 @@
     </div>
 
     <script>
+        // Xử lý chế độ Sáng / Tối
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-btn').innerText = '☀️ Sáng';
+        }
+
+        function toggleTheme() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-btn').innerText = '🌙 Tối';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-btn').innerText = '☀️ Sáng';
+            }
+        }
+
         const sheetId = '1QJYWYyns-AUyAMUbuLnsUSrN6zNg-AuNVlK4ccy-__M'; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=0`;
         let storiesData = []; 

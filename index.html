@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ</title>
-    <!-- Thêm font chữ thư pháp / nghệ thuật từ Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
+    <!-- Đổi sang font Dancing Script mềm mại, dễ đọc, hỗ trợ tiếng Việt cực tốt -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #a10000; 
@@ -39,24 +39,21 @@
             min-height: 100vh;
         }
         
-        /* --- TIÊU ĐỀ THƯ PHÁP PHÍA TRÊN --- */
+        /* --- TIÊU ĐỀ THƯ PHÁP MỚI --- */
         .site-header {
             text-align: center;
-            padding: 30px 10px 0px 10px; 
+            padding: 30px 10px 15px 10px; 
             background-color: var(--bg-color);
             transition: background-color 0.3s;
         }
         .site-title {
-            font-family: 'Great Vibes', cursive, serif;
-            font-size: 60px;
-            line-height: 1.5;
+            font-family: 'Dancing Script', cursive;
+            font-size: 55px;
             color: var(--primary);
             margin: 0;
-            padding-bottom: 25px; 
-            display: inline-block; 
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
-            letter-spacing: 2px; /* Đã thêm giãn cách chữ để không bị dính sát */
+            letter-spacing: 1px;
         }
 
         /* --- MENU --- */
@@ -307,8 +304,8 @@
 
         /* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI --- */
         @media (max-width: 768px) {
-            .site-title { font-size: 45px; padding-bottom: 20px; }
-            .site-header { padding: 20px 10px 0px 10px; }
+            .site-title { font-size: 42px; }
+            .site-header { padding: 20px 10px 15px 10px; }
             .main-layout { flex-direction: column; }
             .navbar {
                 gap: 5px;
@@ -327,7 +324,7 @@
 </head>
 <body>
 
-    <!-- Tiêu đề thư viện dạng chữ nghệ thuật phía trên menu -->
+    <!-- Tiêu đề thư viện -->
     <div class="site-header">
         <h1 class="site-title">Thư Viện Đam Mỹ</h1>
     </div>

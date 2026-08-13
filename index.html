@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ</title>
+    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
     <style>
         :root {
             --primary: #a10000; 
@@ -271,12 +271,12 @@
         let allStatuses = new Set(); 
         let allTeams = new Set();
 
-        // Hàm chuyển đổi link Google Drive sang link ảnh trực tiếp
+        // Hàm chuyển đổi link Google Drive sang dạng hiển thị ảnh trực tiếp chuẩn xác
         function fixDriveLink(url) {
             if (!url) return '';
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
             if (match && match[1]) {
-                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                return `https://lh3.googleusercontent.com/d/${match[1]}=s800`;
             }
             return url;
         }
@@ -331,7 +331,7 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        // Lấy link gốc từ cột J (index 9) và tự động chuẩn hóa sang link ảnh trực tiếp
+                        // Lấy link ảnh từ Cột J (index 9) và fix qua hàm Googleusercontent
                         let rawLinkAnh = getValue(9, ''); 
                         let linkAnh = fixDriveLink(rawLinkAnh);
                         
@@ -344,7 +344,7 @@
 
                         storiesHTML += `
                             <div class="story-card" data-genre="${theLoai}" data-status="${tinhTrang}" data-team="${team}">
-                                <img src="${linkAnh}" alt="${tenTruyen}" class="story-image" onerror="this.src='https://via.placeholder.com/250x350?text=Lỗi+Ảnh'">
+                                <img src="${linkAnh}" alt="${tenTruyen}" class="story-image">
                                 <h3 class="story-title">${tenTruyen}</h3>
                                 <div class="story-info">
                                     <b>Tác giả:</b> ${tacGia}<br>

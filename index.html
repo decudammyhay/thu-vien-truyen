@@ -347,7 +347,7 @@
 
                     // Đổ dữ liệu Thể loại vào Sidebar
                     const genreListUl = document.getElementById('dynamic-genre-list');
-                    let genresHTML = `<li><a href="#" onclick="filterAll(event)">📚 Tất cả truyện</a></li>`;
+                    let genresHTML = `<li><a href="#" onclick="filterAll(event)"></a></li>`;
                     
                     Array.from(allGenres)
                         .sort((a, b) => a.localeCompare(b, 'vi'))

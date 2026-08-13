@@ -50,7 +50,7 @@
         }
         .read-btn {
             display: inline-block;
-            background: #6a35c2; /* Giữ nút bấm màu tím cho nổi bật trên nền đỏ nhạt */
+            background: #6a35c2; /* Nút bấm màu tím */
             color: #fff;
             text-decoration: none;
             padding: 10px 20px;
@@ -66,12 +66,12 @@
 <body>
 
     <div class="container" id="story-grid">
-        <!-- Các truyện sẽ tự động xuất hiện ở đây -->
+        <!-- Dữ liệu sẽ tự động load vào đây -->
     </div>
 
     <script>
-        // ID đã được sửa lại dấu gạch ngang chính xác
-        const sheetId = '1QJYWVyns-AUyAMUbuLnsUSrN6zNg-AuNVIK4ccy__M'; 
+        // Đã trả lại ID có dấu gạch dưới chuẩn xác của bạn!
+        const sheetId = '1QJYWVyns_AUyAMUbuLnsUSrN6zNg_AuNVIK4ccy__M'; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
 
         fetch(url)
@@ -82,18 +82,27 @@
                 const grid = document.getElementById('story-grid');
 
                 rows.forEach((row, index) => {
-                    if (index === 0 || !row.c[0]) return; 
+                    if (index === 0) return; // Bỏ qua dòng tiêu đề
 
-                    // QUY TẮC ĐẾM CỘT: Cột A là 0, B là 1, C là 2...
-                    const tenTruyen = row.c[0] ? row.c[0].v : 'Chưa cập nhật'; // Cột A
-                    const tacGia = row.c[1] ? row.c[1].v : ''; // Cột B
+                    // Cơ chế lấy dữ liệu an toàn 
+                    const getValue = (colIndex, defaultVal) => {
+                        if (row.c && row.c[colIndex] && row.c[colIndex].v != null) {
+                            return row.c[colIndex].v;
+                        }
+                        return defaultVal;
+                    };
+
+                    const tenTruyen = getValue(0, ''); // Cột A
+                    if (!tenTruyen) return; // Không có tên thì ẩn luôn thẻ đó
+
+                    const tacGia = getValue(1, 'Đang cập nhật'); // Cột B
+                    const linkTruyen = getValue(8, '#'); // Cột I (Vị trí số 8)
                     
-                    // Theo ảnh mới nhất, cột Link Truyện đang ở cột I (chữ cái thứ 9 => số 8)
-                    const linkTruyen = row.c[8] ? row.c[8].v : '#'; 
-                    
-                    // Cột Link ảnh đã chuyển đổi. 
-                    // Nếu nó nằm ở cột J thì số 9. Nếu ở cột K thì bạn sửa thành số 10 nhé!
-                    const linkAnh = row.c[9] ? row.c[9].v : 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh';
+                    // Lấy ảnh ở cột K (vị trí 10) hoặc J (vị trí 9)
+                    let linkAnh = getValue(10, ''); 
+                    if (!linkAnh || linkAnh === '#ERROR!') {
+                        linkAnh = getValue(9, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
+                    }
 
                     const card = `
                         <div class="story-card">

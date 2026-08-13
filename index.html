@@ -6,8 +6,8 @@
     <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
     <style>
         :root {
-            --primary: #6a35c2;
-            --bg-color: #F5D0D0;
+            --primary: #a10000; /* Đổi sang màu Đỏ Đậm */
+            --bg-color: #F5D0D0; /* Nền Đỏ Nhạt */
             --card-bg: #ffffff;
         }
         body {
@@ -87,6 +87,9 @@
             width: 100%;
             margin-top: 10px;
         }
+        .btn-read-more:hover {
+            background-color: var(--primary);
+        }
         .widget-title {
             font-size: 16px;
             color: var(--primary);
@@ -101,7 +104,17 @@
         .genre-list li {
             padding: 8px 0;
             border-bottom: 1px solid #eee;
+        }
+        /* Style cho link thể loại */
+        .genre-list a {
+            color: #333;
+            text-decoration: none;
+            display: block;
             cursor: pointer;
+        }
+        .genre-list a:hover {
+            color: var(--primary);
+            font-weight: bold;
         }
         .counter-img {
             width: 100%;
@@ -153,24 +166,21 @@
 <body>
 
     <div class="navbar">
-        <a href="#">TRANG CHỦ</a>
+        <a href="#" onclick="filterGenre('ALL', event)">TRANG CHỦ</a>
         <a href="#">DANH SÁCH TRUYỆN</a>
         <a href="#">TÌNH TRẠNG TRUYỆN</a>
     </div>
 
     <div class="main-layout">
         <div class="content" id="story-grid">
-            <h3 id="loading-text" style="color: #6a35c2; text-align: center; width: 100%;">Đang tải dữ liệu truyện...</h3>
+            <h3 id="loading-text" style="color: var(--primary); text-align: center; width: 100%;">Đang tải dữ liệu truyện...</h3>
         </div>
 
         <div class="sidebar">
             <h3 class="widget-title">THỂ LOẠI</h3>
-            <ul class="genre-list">
-                <li>Đam Mỹ</li>
-                <li>Ngôn Tình</li>
-                <li>Cổ Đại</li>
-                <li>Hiện Đại</li>
-                <li>Xuyên Không</li>
+            <!-- Danh sách thể loại tự động chạy vào đây -->
+            <ul class="genre-list" id="dynamic-genre-list">
+                <li>Đang tải...</li>
             </ul>
 
             <h3 class="widget-title" style="margin-top: 30px;">LƯỢT TRUY CẬP</h3>
@@ -183,26 +193,31 @@
     <div class="modal" id="story-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title" style="color: #6a35c2;">Tên Truyện</h2>
+            <h2 id="modal-title" style="color: var(--primary);">Tên Truyện</h2>
             <div id="modal-desc" style="line-height: 1.6; margin-top: 15px;">Văn án...</div>
             <a href="#" id="modal-link" class="btn-read-full" target="_blank">ĐỌC TRUYỆN ➔</a>
         </div>
     </div>
 
     <script>
-        // LẦN NÀY ĐẢM BẢO ID CHUẨN XÁC 100% CÓ DẤU GẠCH NGANG NHÉ:
-        const sheetId = '1QJYWVyns-AUyAMUbuLnsUSrN6zNg-AuNVIK4ccy__M'; 
+        // BƯỚC QUAN TRỌNG NHẤT: BẠN HÃY DÁN ĐÚNG ID TỪ THANH ĐỊA CHỈ GOOGLE SHEET VÀO ĐÂY
+        // Ví dụ: https://docs.google.com/spreadsheets/d/ĐÂY_LÀ_CHỖ_CHỨA_ID/edit
+        const sheetId = '1QJYWYyns-AUyAMUbuLnsUSrN6zNg-AuNVlK4ccy-__M'; 
         
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=0`;
         let storiesData = []; 
+        let allGenres = new Set(); // Bộ lọc thể loại tự động
 
         fetch(url)
             .then(res => res.text())
             .then(text => {
                 const grid = document.getElementById('story-grid');
                 try {
-                    const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-                    const json = JSON.parse(jsonString);
+                    // Thuật toán tách dữ liệu chống lỗi mới
+                    const match = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
+                    if (!match) throw new Error("Sai ID");
+                    
+                    const json = JSON.parse(match[1]);
                     const rows = json.table.rows;
                     
                     let storiesHTML = '';
@@ -220,6 +235,15 @@
 
                         const tacGia = getValue(1, 'Đang cập nhật');
                         const theLoai = getValue(2, 'Đang cập nhật');
+                        
+                        // Lọc các thể loại vào danh sách bên Sidebar
+                        if (theLoai !== 'Đang cập nhật') {
+                            theLoai.split(',').forEach(g => {
+                                let cleanGenre = g.trim();
+                                if (cleanGenre) allGenres.add(cleanGenre);
+                            });
+                        }
+
                         const cp = getValue(3, 'Đang cập nhật');
                         const chuong = getValue(4, '??');
                         const tinhTrang = getValue(5, 'Đang cập nhật');
@@ -233,8 +257,9 @@
                         storiesData.push({ tenTruyen, gioiThieu, linkTruyen });
                         const arrayIndex = storiesData.length - 1;
 
+                        // Thêm data-genre để làm chức năng lọc truyện
                         storiesHTML += `
-                            <div class="story-card">
+                            <div class="story-card" data-genre="${theLoai}">
                                 <img src="${linkAnh}" alt="${tenTruyen}" class="story-image">
                                 <h3 class="story-title">${tenTruyen}</h3>
                                 <div class="story-info">
@@ -252,15 +277,40 @@
 
                     grid.innerHTML = storiesHTML;
 
+                    // IN DANH SÁCH THỂ LOẠI TỰ ĐỘNG RA SIDEBAR
+                    const genreListUl = document.getElementById('dynamic-genre-list');
+                    let genresHTML = `<li><a href="#" onclick="filterGenre('ALL', event)">📚 Tất cả truyện</a></li>`;
+                    
+                    // Sắp xếp theo bảng chữ cái
+                    Array.from(allGenres).sort().forEach(g => {
+                        genresHTML += `<li><a href="#" onclick="filterGenre('${g}', event)">${g}</a></li>`;
+                    });
+                    genreListUl.innerHTML = genresHTML;
+
                 } catch (error) {
-                    console.error("Lỗi:", error);
-                    grid.innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI HIỂN THỊ DỮ LIỆU:</b> ID đúng nhưng không thể đọc Sheet. Bạn hãy vào Google Sheet > Tệp > Chia sẻ > Công bố lên web lại một lần nữa nhé.</p>`;
+                    grid.innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI DỮ LIỆU:</b> Bạn ơi, bạn nhớ thay đoạn chữ ĐIỀN_ID_CỦA_BẠN_VÀO_ĐÂY bằng ID Sheet chuẩn xác của bạn nhé.</p>`;
                 }
             })
             .catch(error => {
-                document.getElementById('story-grid').innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI MẠNG:</b> Không thể kết nối với Google Sheet.</p>`;
+                document.getElementById('story-grid').innerHTML = `<p style="color: red; padding: 20px;"><b>LỖI MẠNG:</b> Không kết nối được Google Sheet.</p>`;
             });
 
+        // Hàm lọc thể loại khi bấm vào Sidebar
+        function filterGenre(selectedGenre, event) {
+            event.preventDefault(); // Ngăn trình duyệt nhảy lên đầu trang
+            const cards = document.querySelectorAll('.story-card');
+            
+            cards.forEach(card => {
+                const genresOfCard = card.getAttribute('data-genre');
+                if (selectedGenre === 'ALL' || genresOfCard.includes(selectedGenre)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Hàm điều khiển Popup
         function openModal(index) {
             const data = storiesData[index];
             document.getElementById('modal-title').innerText = data.tenTruyen;

@@ -20,20 +20,22 @@
         /* --- MENU --- */
         .navbar {
             background-color: var(--primary);
-            padding: 10px 20px;
+            padding: 10px 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .navbar a.nav-link {
             color: white;
             text-decoration: none;
             font-weight: bold;
-            font-size: 16px;
-            padding: 10px 15px;
+            font-size: 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            white-space: nowrap;
         }
         .navbar a.nav-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
@@ -49,7 +51,7 @@
             display: none;
             position: absolute;
             background-color: #ffffff;
-            min-width: 220px;
+            min-width: 200px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1000;
             top: 100%;
@@ -57,18 +59,18 @@
             transform: translateX(-50%);
             border-radius: 8px;
             overflow: hidden;
-            padding-top: 10px;
-            margin-top: -5px;
+            padding-top: 5px;
+            margin-top: 5px;
         }
         .dropdown-content a {
             color: #333;
-            padding: 12px 16px;
+            padding: 10px 15px;
             text-decoration: none;
             display: block;
             text-align: left;
             font-weight: normal;
             border-bottom: 1px solid #eee;
-            font-size: 15px;
+            font-size: 14px;
         }
         .dropdown-content a:hover {
             background-color: var(--bg-color);
@@ -214,8 +216,18 @@
             font-size: 16px;
             margin-top: 20px;
         }
+
+        /* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI --- */
         @media (max-width: 768px) {
             .main-layout { flex-direction: column; }
+            .navbar {
+                gap: 10px;
+                padding: 8px 10px;
+            }
+            .navbar a.nav-link {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
@@ -226,7 +238,7 @@
         
         <!-- Menu Tình Trạng Dropdown -->
         <div class="dropdown">
-            <a href="#" class="nav-link" onclick="event.preventDefault()">TÌNH TRẠNG TRUYỆN ▾</a>
+            <a href="#" class="nav-link" onclick="event.preventDefault()">TÌNH TRẠNG ▾</a>
             <div class="dropdown-content" id="dynamic-status-list">
                 <a href="#">Đang tải...</a>
             </div>
@@ -271,7 +283,6 @@
         let allStatuses = new Set(); 
         let allTeams = new Set();
 
-        // Hàm chuyển đổi link Google Drive sang dạng hiển thị ảnh trực tiếp chuẩn xác
         function fixDriveLink(url) {
             if (!url) return '';
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -301,8 +312,6 @@
                         };
 
                         const tenTruyen = getValue(0, '');
-                        
-                        // Bỏ qua dòng trống hoặc dòng tiêu đề
                         if (!tenTruyen || tenTruyen.toString().toLowerCase().includes('tên truyện')) return;
 
                         const tacGia = getValue(1, 'Đang cập nhật');
@@ -331,7 +340,6 @@
                         const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
                         const linkTruyen = getValue(8, '#');
                         
-                        // Lấy link ảnh từ Cột J (index 9) và fix qua hàm Googleusercontent
                         let rawLinkAnh = getValue(9, ''); 
                         let linkAnh = fixDriveLink(rawLinkAnh);
                         

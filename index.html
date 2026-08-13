@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Đam Mỹ</title>
+    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
+    <!-- Thêm font chữ thư pháp / nghệ thuật từ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #a10000; 
@@ -32,8 +34,27 @@
             margin: 0;
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
+        /* --- TIÊU ĐỀ THƯ PHÁP PHÍA TRÊN --- */
+        .site-header {
+            text-align: center;
+            padding: 25px 10px 15px 10px;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s;
+        }
+        .site-title {
+            font-family: 'Great Vibes', cursive, serif;
+            font-size: 55px;
+            color: var(--primary);
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
         /* --- MENU --- */
         .navbar {
             background-color: var(--primary);
@@ -130,6 +151,7 @@
             margin: 20px auto;
             gap: 20px;
             padding: 0 15px;
+            flex: 1; /* Đẩy footer xuống dưới cùng */
         }
         .content {
             flex: 3;
@@ -261,8 +283,28 @@
             margin-top: 20px;
         }
 
+        /* --- FOOTER CHÂN WEB --- */
+        .site-footer {
+            text-align: center;
+            padding: 25px 15px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-top: 2px dashed var(--primary);
+            margin-top: 40px;
+            font-size: 15px;
+            line-height: 1.6;
+            font-style: italic;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .site-footer span.heart {
+            color: var(--primary);
+            font-style: normal;
+        }
+
         /* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI --- */
         @media (max-width: 768px) {
+            .site-title { font-size: 40px; }
+            .site-header { padding: 15px 10px 10px 10px; }
             .main-layout { flex-direction: column; }
             .navbar {
                 gap: 5px;
@@ -272,10 +314,19 @@
                 font-size: 11px;
                 padding: 5px 6px;
             }
+            .site-footer {
+                font-size: 13px;
+                padding: 20px 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Tiêu đề thư viện dạng chữ nghệ thuật phía trên menu -->
+    <div class="site-header">
+        <h1 class="site-title">Thư Viện Đam Mỹ</h1>
+    </div>
 
     <div class="navbar">
         <a href="#" class="nav-link" onclick="filterAll(event)">TRANG CHỦ</a>
@@ -313,6 +364,12 @@
         </div>
     </div>
 
+    <!-- Chân web giới thiệu -->
+    <div class="site-footer">
+        Góc nhỏ tổng hợp truyện chữ Đam Mỹ của những thước phim AI mãn nhãn.<br>
+        Chúc mọi người có những phút giây thư giãn thật tuyệt vời! <span class="heart">❤</span>
+    </div>
+
     <div class="modal" id="story-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -323,7 +380,6 @@
     </div>
 
     <script>
-        // Xử lý bật/tắt dropdown khi click cho máy tính & điện thoại
         function toggleDropdown(event, id) {
             event.preventDefault();
             event.stopPropagation();
@@ -334,14 +390,12 @@
             document.getElementById(id).classList.toggle('show');
         }
 
-        // Click ra ngoài thì ẩn dropdown
         window.onclick = function() {
             document.querySelectorAll('.dropdown-content').forEach(d => {
                 d.classList.remove('show');
             });
         }
 
-        // Xử lý chế độ Sáng / Tối
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');

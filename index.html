@@ -3,76 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Viện Truyện</title>
+    <title>Thư Viện Đam Mỹ - Ngôn Tình</title>
     <style>
+        :root {
+            --primary: #6a35c2; /* Tím đặc trưng */
+            --bg-color: #F5D0D0; /* Nền đỏ nhạt */
+            --card-bg: #ffffff;
+        }
         body {
-            background-color: #F5D0D0; /* Màu nền đỏ nhạt */
+            background-color: var(--bg-color);
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
             color: #333;
         }
-        .container {
+        /* --- MENU --- */
+        .navbar {
+            background-color: var(--primary);
+            padding: 15px;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        /* --- BỐ CỤC CHÍNH --- */
+        .main-layout {
+            display: flex;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 15px;
+        }
+        .content {
+            flex: 3;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
-        .story-card {
-            background: #fff;
+        .sidebar {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 20px;
             border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            text-align: center;
-            padding: 15px;
-            transition: transform 0.2s;
+            height: fit-content;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .story-card:hover {
-            transform: translateY(-5px);
+        /* --- CARD TRUYỆN --- */
+        .story-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .story-image {
             width: 100%;
-            height: 350px;
-            object-fit: cover;
+            aspect-ratio: 2/3; /* Tự động ép ảnh theo tỷ lệ chuẩn của bìa truyện */
+            object-fit: cover; /* Cắt cúp ảnh gọn gàng không bị méo */
             border-radius: 10px;
         }
-        .story-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 15px 0 5px;
-            color: #000;
+        .story-info {
+            font-size: 13px;
+            text-align: left;
+            margin: 10px 0;
+            line-height: 1.6;
         }
-        .story-author {
-            font-size: 14px;
-            color: #666;
+        .story-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+            text-align: center;
+        }
+        .btn-read-more {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+        /* --- SIDEBAR WIDGETS --- */
+        .widget-title {
+            font-size: 16px;
+            color: var(--primary);
+            border-bottom: 2px dashed var(--primary);
+            padding-bottom: 5px;
             margin-bottom: 15px;
         }
-        .read-btn {
-            display: inline-block;
-            background: #6a35c2; /* Nút bấm màu tím */
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: bold;
+        .genre-list {
+            list-style: none;
+            padding: 0;
         }
-        .read-btn:hover {
-            background: #4e2694;
+        .genre-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .counter-img {
+            width: 100%;
+            margin-top: 10px;
+        }
+        /* --- MODAL (Cửa sổ POPUP Giới thiệu) --- */
+        .modal {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: red;
+        }
+        .btn-read-full {
+            display: block;
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        /* Responsive cho điện thoại */
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="story-grid">
-        <!-- Dữ liệu sẽ tự động load vào đây -->
+    <!-- Menu ngang -->
+    <div class="navbar">
+        <a href="#">TRANG CHỦ</a>
+        <a href="#">DANH SÁCH TRUYỆN</a>
+        <a href="#">TÌNH TRẠNG TRUYỆN</a>
+    </div>
+
+    <div class="main-layout">
+        <!-- Khung chứa lưới truyện -->
+        <div class="content" id="story-grid">
+            <!-- Dữ liệu load vào đây -->
+        </div>
+
+        <!-- Thanh bên Sidebar -->
+        <div class="sidebar">
+            <h3 class="widget-title">THỂ LOẠI</h3>
+            <ul class="genre-list">
+                <li>Đam Mỹ</li>
+                <li>Ngôn Tình</li>
+                <li>Cổ Đại</li>
+                <li>Hiện Đại</li>
+                <li>Xuyên Không</li>
+            </ul>
+
+            <h3 class="widget-title" style="margin-top: 30px;">LƯỢT TRUY CẬP</h3>
+            <!-- Code bộ đếm truy cập miễn phí từ hitwebcounter -->
+            <a href="https://www.hitwebcounter.com" target="_blank">
+                <img src="https://hitwebcounter.com/counter/counter.php?page=16805825&style=0006&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" class="counter-img"/>
+            </a>
+        </div>
+    </div>
+
+    <!-- Cửa sổ Popup hiển thị Giới thiệu -->
+    <div class="modal" id="story-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color: #6a35c2;">Tên Truyện</h2>
+            <div id="modal-desc" style="line-height: 1.6; margin-top: 15px;">Văn án...</div>
+            <a href="#" id="modal-link" class="btn-read-full" target="_blank">ĐỌC TRUYỆN NỔI BẬT ➔</a>
+        </div>
     </div>
 
     <script>
-        // Đã trả lại ID có dấu gạch dưới chuẩn xác của bạn!
-        const sheetId = '1QJYWVyns_AUyAMUbuLnsUSrN6zNg_AuNVIK4ccy__M'; 
+        // ID CHUẨN XÁC ĐÃ SỬA LỖI
+        const sheetId = '1QJYWVyns-AUyAMUbuLnsUSrN6zNg-AuNVIK4ccy__M'; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+
+        let storiesData = []; // Lưu trữ dữ liệu để nhét vào popup
 
         fetch(url)
             .then(res => res.text())
@@ -82,40 +215,68 @@
                 const grid = document.getElementById('story-grid');
 
                 rows.forEach((row, index) => {
-                    if (index === 0) return; // Bỏ qua dòng tiêu đề
+                    if (index === 0) return; 
 
-                    // Cơ chế lấy dữ liệu an toàn 
                     const getValue = (colIndex, defaultVal) => {
-                        if (row.c && row.c[colIndex] && row.c[colIndex].v != null) {
-                            return row.c[colIndex].v;
-                        }
+                        if (row.c && row.c[colIndex] && row.c[colIndex].v != null) return row.c[colIndex].v;
                         return defaultVal;
                     };
 
-                    const tenTruyen = getValue(0, ''); // Cột A
-                    if (!tenTruyen) return; // Không có tên thì ẩn luôn thẻ đó
+                    // Map đúng theo thứ tự cột mới nhất của bạn:
+                    // A(0):Tên | B(1):Tác giả | C(2):Thể loại | D(3):CP | E(4):Chương | F(5):Tình trạng | G(6):Team | H(7):Giới thiệu | I(8):Link truyện
+                    const tenTruyen = getValue(0, '');
+                    if (!tenTruyen) return;
 
-                    const tacGia = getValue(1, 'Đang cập nhật'); // Cột B
-                    const linkTruyen = getValue(8, '#'); // Cột I (Vị trí số 8)
+                    const tacGia = getValue(1, 'Đang cập nhật');
+                    const theLoai = getValue(2, 'Đang cập nhật');
+                    const cp = getValue(3, 'Đang cập nhật');
+                    const chuong = getValue(4, '??');
+                    const tinhTrang = getValue(5, 'Đang cập nhật');
+                    const team = getValue(6, 'Đang cập nhật');
+                    const gioiThieu = getValue(7, 'Chưa có giới thiệu.');
+                    const linkTruyen = getValue(8, '#');
                     
-                    // Lấy ảnh ở cột K (vị trí 10) hoặc J (vị trí 9)
                     let linkAnh = getValue(10, ''); 
-                    if (!linkAnh || linkAnh === '#ERROR!') {
-                        linkAnh = getValue(9, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
-                    }
+                    if (!linkAnh || linkAnh === '#ERROR!') linkAnh = getValue(9, 'https://via.placeholder.com/250x350?text=Chưa+Có+Ảnh');
 
+                    // Lưu dữ liệu vào mảng
+                    storiesData.push({ tenTruyen, gioiThieu, linkTruyen });
+                    const arrayIndex = storiesData.length - 1;
+
+                    // Vẽ Card Truyện
                     const card = `
                         <div class="story-card">
                             <img src="${linkAnh}" alt="${tenTruyen}" class="story-image">
                             <h3 class="story-title">${tenTruyen}</h3>
-                            <p class="story-author">${tacGia}</p>
-                            <a href="${linkTruyen}" class="read-btn" target="_blank">ĐỌC TRUYỆN ➔</a>
+                            <div class="story-info">
+                                <b>Tác giả:</b> ${tacGia}<br>
+                                <b>Thể loại:</b> ${theLoai}<br>
+                                <b>CP:</b> ${cp}<br>
+                                <b>Số chương:</b> ${chuong}<br>
+                                <b>Tình trạng:</b> ${tinhTrang}<br>
+                                <b>Team:</b> ${team}
+                            </div>
+                            <button class="btn-read-more" onclick="openModal(${arrayIndex})">ĐỌC TIẾP ➔</button>
                         </div>
                     `;
                     grid.innerHTML += card;
                 });
             })
-            .catch(error => console.error('Lỗi khi tải dữ liệu:', error));
+            .catch(error => console.error('Lỗi khi tải:', error));
+
+        // Hàm mở/đóng Modal Popup
+        function openModal(index) {
+            const data = storiesData[index];
+            document.getElementById('modal-title').innerText = data.tenTruyen;
+            // Thay thế kí tự xuống dòng trong Google Sheet thành thẻ <br> trong HTML
+            document.getElementById('modal-desc').innerHTML = data.gioiThieu.replace(/\n/g, '<br>');
+            document.getElementById('modal-link').href = data.linkTruyen;
+            
+            document.getElementById('story-modal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('story-modal').style.display = 'none';
+        }
     </script>
 </body>
 </html>

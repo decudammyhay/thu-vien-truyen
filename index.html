@@ -39,7 +39,7 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* --- DROPDOWN CHUNG --- */
+        /* --- DROPDOWN ĐÃ FIX LỖI RÊ CHUỘT --- */
         .dropdown {
             position: relative;
             display: inline-flex;
@@ -57,7 +57,8 @@
             transform: translateX(-50%);
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 5px;
+            padding-top: 10px;
+            margin-top: -5px;
         }
         .dropdown-content a {
             color: #333;
@@ -231,7 +232,7 @@
             </div>
         </div>
 
-        <!-- Menu Team Dropdown mới thêm -->
+        <!-- Menu Team Dropdown Mới -->
         <div class="dropdown">
             <a href="#" class="nav-link" onclick="event.preventDefault()">TEAM ▾</a>
             <div class="dropdown-content" id="dynamic-team-list">
@@ -268,7 +269,7 @@
         let storiesData = []; 
         let allGenres = new Set();
         let allStatuses = new Set(); 
-        let allTeams = new Set(); // Biến lưu danh sách team
+        let allTeams = new Set();
 
         fetch(url)
             .then(res => res.text())
@@ -345,7 +346,6 @@
 
                     grid.innerHTML = storiesHTML;
 
-                    // Đổ dữ liệu Thể loại vào Sidebar
                     const genreListUl = document.getElementById('dynamic-genre-list');
                     let genresHTML = `<li><a href="#" onclick="filterAll(event)">📚 Tất cả truyện</a></li>`;
                     
@@ -356,7 +356,6 @@
                         });
                     genreListUl.innerHTML = genresHTML;
 
-                    // Đổ dữ liệu Tình trạng vào Dropdown Menu
                     const statusDropdown = document.getElementById('dynamic-status-list');
                     let statusHTML = '';
                     
@@ -367,7 +366,6 @@
                         });
                     statusDropdown.innerHTML = statusHTML;
 
-                    // Đổ dữ liệu Team vào Dropdown Menu mới
                     const teamDropdown = document.getElementById('dynamic-team-list');
                     let teamHTML = '';
                     
@@ -418,7 +416,6 @@
             });
         }
 
-        // Hàm lọc theo Team
         function filterTeam(selectedTeam, event) {
             event.preventDefault();
             const cards = document.querySelectorAll('.story-card');
